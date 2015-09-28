@@ -1,0 +1,16 @@
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    org.hopto.eriksen: ALL
+
+    org.hibernate: ALL
+
+  appenders:
+    - type: console
+      logFormat: "%-5level %date{ISO8601} [%thread] [%L:%logger{64}] - %msg%n"

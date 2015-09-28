@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="PersistanceServiceTest" verbose="1">
+	<test name="TestPersistenceTest">
+		<classes>
+			<class name="org.hopto.eriksen.db.jpaguice.RecipeJpaGuicePersisterTest" />
+			<class name="org.hopto.eriksen.db.jpaguice.IngredientJpaGuicePersisterTest" />
+		</classes>
+	</test>
+</suite>
