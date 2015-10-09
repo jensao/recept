@@ -20,9 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>0.8.2</dropwizard.version>
-        <dropwizard.guice.version>0.8.2.0</dropwizard.guice.version>
-        <hibernate.version>4.3.10.Final</hibernate.version>
-        <guice.persist.version>4.0</guice.persist.version>
+        <hibernate.version>4.3.5.Final</hibernate.version>
         <testng.version>6.8.21</testng.version>
         <mainClass>org.hopto.eriksen.ReceptApplication</mainClass>
     </properties>
@@ -35,9 +33,9 @@
         </dependency>
         
 		<dependency>
-			<groupId>com.hubspot.dropwizard</groupId>
-			<artifactId>dropwizard-guice</artifactId>
-			<version>${dropwizard.guice.version}</version>
+			<groupId>io.dropwizard</groupId>
+			<artifactId>dropwizard-hibernate</artifactId>
+			<version>${dropwizard.version}</version>
 		</dependency>
 		
 		<!-- DB dependencies -->
@@ -48,13 +46,12 @@
 			<scope>runtime</scope>
 		</dependency>
 		
-		<!-- This isn't included in the dropwizard-guice, so include it here -->
 		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-persist</artifactId>
-			<version>${guice.persist.version}</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.36</version>
 		</dependency>
-		
+				
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
@@ -118,6 +115,18 @@
                     </execution>
                 </executions>
             </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<configuration>
+					<mainClass>${mainClass}</mainClass>
+					<arguments>
+						<argument>server</argument>
+						<argument>productionConfig.yml</argument>
+					</arguments>
+				</configuration>
+			</plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>

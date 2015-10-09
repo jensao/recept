@@ -1,15 +1,15 @@
 # Database settings.
 database:
-  driverClass: com.mysql.jdbc.Driver
+  driverClass: org.hsqldb.jdbcDriver
   user: je
-  password: periskop
-  url: jdbc:mysql://192.168.5.10:3306/recept
+  password: 
+  url: jdbc:hsqldb:mem:recept;shutdown=true;hsqldb.tx=mvcc
   properties: 
-    hibernate.c3p0.min_size: 5
-    hibernate.c3p0.max_size: 20
-    hibernate.c3p0.timeout: 500
-    hibernate.c3p0.max_statements: 50
-    hibernate.c3p0.idle_test_period: 2000
+    hibernate.dialect: org.hibernate.dialect.HSQLDialect
+    hibernate.hbm2ddl.auto: create-drop
+    hibernate.flushMode: COMMIT
+
+  validationQuery: "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"
 
 # Logging settings.
 logging:
@@ -20,7 +20,7 @@ logging:
   # Logger-specific levels.
   loggers:
     org.hopto.eriksen: ALL
-    org.hibernate: DEBUG
+    org.hibernate: TRACE
 
   appenders:
     - type: console
