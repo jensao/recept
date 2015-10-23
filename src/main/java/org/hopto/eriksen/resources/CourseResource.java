@@ -73,7 +73,7 @@ public class CourseResource {
 	@Timed
 	@UnitOfWork
 	public Response saveItem(@Valid Course course) {
-		courseDAO.create(course);
+		courseDAO.saveOrUpdate(course);
 		URI tmpUri = UriBuilder
 				.fromResource(CourseResource.class)
 				.path("/{id}")
@@ -123,7 +123,7 @@ public class CourseResource {
 	 * @param id
 	 * @return
 	 */
-	// TO REMEMBER: The relation type between recipes and pars is of type composition, use a sub-resource url
+	// TO REMEMBER: The relation type between course and recipe is of type composition, use a sub-resource url
 	@GET
 	@UnitOfWork
 	@Path("/{id}/recipes")
@@ -152,7 +152,7 @@ public class CourseResource {
 		
 		// TODO Check if the part is new or shall be updated
 		course.addRecipe(recipe);
-		courseDAO.create(course);
+		courseDAO.saveOrUpdate(course);
 		
 		return null;
 	}

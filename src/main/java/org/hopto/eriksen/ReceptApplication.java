@@ -21,6 +21,7 @@ public class ReceptApplication extends Application<ReceptConfiguration> {
 		new ReceptApplication().run(args);
 	}
 
+	// TODO change to ScanningHibernateBundle
 	private final HibernateBundle<ReceptConfiguration> hibernateBundle = new HibernateBundle<ReceptConfiguration>(
 			Course.class, 
 			Ingredient.class, 

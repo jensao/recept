@@ -4,6 +4,7 @@ package org.hopto.eriksen.core;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,11 +14,13 @@ import javax.persistence.GeneratedValue;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -27,7 +30,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "course")
 @XmlRootElement
 public class Course implements java.io.Serializable {
-
+	private static final long serialVersionUID = 1L;
+	
 	private Integer courseId;
 	private String title;
 	private String comment;
@@ -76,6 +80,7 @@ public class Course implements java.io.Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_updated", length = 19)
+	@Version
 	public Date getLastUpdated() {
 		return this.lastUpdated;
 	}
@@ -84,7 +89,7 @@ public class Course implements java.io.Serializable {
 		this.lastUpdated = lastUpdated;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade=CascadeType.ALL)
 	public Set<Recipe> getRecipes() {
 		return this.recipes;
 	}
@@ -97,7 +102,55 @@ public class Course implements java.io.Serializable {
 	
 	public void addRecipe(Recipe recipe) {
 		this.recipes.add(recipe);
+		recipe.setCourse(this);
 	}
+	
+	/**
+	 * Helper method that returns the recipe matching the name that this course contains   
+	 * 
+	 * @param name as String
+	 * @return a {@link Recipe} if found, else null
+	 */
+	public Recipe getRecipeByName(String name) {
+		
+		Recipe returnRecipe = null;
+		for (Iterator<Recipe> it = recipes.iterator(); it.hasNext(); ) {
+			Recipe r = it.next();
+			Recipe tmpRecipe = new Recipe();
+			tmpRecipe.setName(name);
+			if (r.equals(tmpRecipe)) {
+				returnRecipe = r;
+			}
+		}
+
+		return returnRecipe;
+	}
+	
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if ( !(other instanceof Course) ) return false;
+
+		final Course course = (Course) other;
+		if ( !course.getTitle().equals( getTitle() )  ) return false;
+
+		return true;
+	}
+
+	public int hashCode() {
+        return getTitle().hashCode() ;
+    }
+
+	@Override
+	public String toString() {
+		return "Course ["
+				+ (courseId != null ? "courseId=" + courseId + ", " : "")
+				+ (title != null ? "title=" + title + ", " : "")
+				+ (comment != null ? "comment=" + comment + ", " : "")
+				+ (lastUpdated != null ? "lastUpdated=" + lastUpdated + ", "
+						: "") + (recipes != null ? "recipes=" + recipes : "")
+				+ "]";
+	}
+	
 	
 
 }

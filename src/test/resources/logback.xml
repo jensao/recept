@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%-5level %date{ISO8601} [%L:%logger{64}] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!-- Bra för att minska utskrifterna från ramverken -->
+	<logger name="org.eclipse.jetty" level="info"/>
+	<logger name="org.hibernate" level="info"/>
+	<logger name="org.hibernate.SQL" level="debug"/>
+	<logger name="org.hibernate.util.JDBCExceptionReporter" level="trace"/> 
+
+
+	<!-- TRACE < DEBUG < INFO < WARN < ERROR -->
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>

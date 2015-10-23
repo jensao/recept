@@ -12,7 +12,6 @@ public class CourseDAO extends AbstractDAO<Course> {
 
 	public CourseDAO(SessionFactory sessionFactory) {
 		super(sessionFactory);
-		// TODO Auto-generated constructor stub
 	}
 
     public Course findById(int id) {
@@ -22,14 +21,12 @@ public class CourseDAO extends AbstractDAO<Course> {
     /**
      * Either save or update the given instance, depending upon resolution of the unsaved-value checks (see the manual for discussion of unsaved-value checking).
      */
-    // Om man byter namn på denna till "persist" så får man en stack-overflow, why?
-    public Course create(Course course) {
+    public Course saveOrUpdate(Course course) {
         return persist(course);
     }
     
     public List<Course> findAll() {
     	return criteria().list();
-//        return list(namedQuery("com.example.helloworld.core.Person.findAll"));
     }
     
 	public List<Course> getAllPaged(int pageNumber, int pageSize) {
