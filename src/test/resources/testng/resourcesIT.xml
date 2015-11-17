@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="integration" verbose="1" parallel="classes" thread-count="5">
+	<test name="RestInterface">
+		<packages>
+			<package name="org.hopto.eriksen.resources" />
+		</packages>
+	</test>
+</suite>

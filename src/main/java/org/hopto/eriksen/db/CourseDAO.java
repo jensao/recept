@@ -22,7 +22,7 @@ public class CourseDAO extends AbstractDAO<Course> {
      * Either save or update the given instance, depending upon resolution of the unsaved-value checks (see the manual for discussion of unsaved-value checking).
      */
     public Course saveOrUpdate(Course course) {
-        return persist(course);
+        return persist(course);		// saveOrUpdate() will be used 
     }
     
     public List<Course> findAll() {
@@ -50,6 +50,21 @@ public class CourseDAO extends AbstractDAO<Course> {
 	
 	public void delete(Course course) {
 		 currentSession().delete(course);
+	}
+	
+	/**
+	 * Flushes the session, e.g. to get a DB id 
+	 */
+	public void flush() {
+		currentSession().flush();
+	}
+	
+	public void clear() {
+		currentSession().clear();
+	}
+	
+	public void merge(Course course) {
+		currentSession().merge(course);
 	}
 	
 }

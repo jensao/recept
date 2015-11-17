@@ -22,6 +22,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -56,6 +57,7 @@ public class Recipe implements java.io.Serializable {
 		this.recipeHasIngredients = recipeHasIngredients;
 	}
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "recipe_id", unique = true, nullable = false)
@@ -67,6 +69,7 @@ public class Recipe implements java.io.Serializable {
 		this.recipeId = recipeId;
 	}
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id", nullable = false)
 	public Course getCourse() {
@@ -86,7 +89,7 @@ public class Recipe implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval=true )
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval=true )
 	@OrderColumn(name="instruction_order")
 	public List<RecipeInstruction> getRecipeInstructions() {
 		return this.recipeInstructions;
@@ -109,12 +112,15 @@ public class Recipe implements java.io.Serializable {
 	// ------------------------ DONT MAKE MODIFICATIONS ABOVE THIS LINE FOR EASIER AUTO REENGINEERING ------------------------ //
 	
 	public void addInstruction(String instruction) {
-		// TODO Check that the instruction doesn't exist already 
+		// TODO Check that the instruction doesn't exist already?
 		RecipeInstruction recipeInstruction = new RecipeInstruction(instruction);
 		this.recipeInstructions.add(recipeInstruction);
 		recipeInstruction.setRecipe(this);
 	}
 
+	/**
+	 * Equals only if the name is the same
+	 */
 	public boolean equals(Object other) {
 		if (this == other) return true;
 		if ( !(other instanceof Recipe) ) return false;

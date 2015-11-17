@@ -7,6 +7,7 @@ import org.hopto.eriksen.core.RecipeHasIngredient;
 import org.hopto.eriksen.core.RecipeHasIngredientId;
 import org.hopto.eriksen.core.RecipeInstruction;
 import org.hopto.eriksen.db.CourseDAO;
+import org.hopto.eriksen.db.RecipeDAO;
 import org.hopto.eriksen.resources.CourseResource;
 
 import io.dropwizard.Application;
@@ -44,13 +45,17 @@ public class ReceptApplication extends Application<ReceptConfiguration> {
 	@Override
 	public void initialize(final Bootstrap<ReceptConfiguration> bootstrap) {
 		bootstrap.addBundle(hibernateBundle);
+		
+		// Serializes java.util.Date into e.g. 2015-10-24T11:40:27.649+0000 instead of epoch timestamp.
+		bootstrap.getObjectMapper().disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 
 	@Override
 	public void run(final ReceptConfiguration configuration, final Environment environment) {
 		final CourseDAO courseDao = new CourseDAO(hibernateBundle.getSessionFactory());
+		final RecipeDAO recipeDAO = new RecipeDAO(hibernateBundle.getSessionFactory());
 		
-	    environment.jersey().register(new CourseResource(courseDao));
+	    environment.jersey().register(new CourseResource(courseDao, recipeDAO));
 	}
 
 

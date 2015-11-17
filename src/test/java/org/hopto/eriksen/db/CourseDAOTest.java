@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionException;
 import org.hopto.eriksen.core.Course;
@@ -109,6 +108,9 @@ public class CourseDAOTest {
 
 		Course course = courseDAO.findById(courseId);		
 		course.setComment(COURSE_SECOND_COMMENT);
+		
+//		Recipe modifiedRecipe = new Recipe();
+//		modifiedRecipe.setName("R1");
 		
 		Recipe r1 = course.getRecipeByName("R1");
 		// Modify the instructions, final result shall be; ["R1 I3", "R1 I1"]

@@ -21,6 +21,9 @@ logging:
   loggers:
     org.hopto.eriksen: ALL
     org.hibernate: DEBUG
+    org.hibernate.loader.plan: INFO
+    org.hibernate.persister.walking: INFO
+    org.eclipse.jetty: INFO
 
   appenders:
     - type: console

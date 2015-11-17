@@ -8,7 +8,8 @@ import javax.ws.rs.core.Response;
 public class CustomNotFoundException extends WebApplicationException {
 
 	/**
-	 * Creates a HTTP 404 (Not Found) exception.
+	 * Creates a HTTP 404 (Not Found) response.
+	 * Shall be used for GET, POST, PUT, DELETE request where the resource can't be found.
 	 * 
 	 * @param message
 	 *            the String that is the entity of the 404 response.

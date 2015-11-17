@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
- * This class is used to get a uniform error response and must be used in all classes that creates error responses 
+ * This class is used to get a uniform error response and must be used in all classes that creates responses. 
  * 
  * @author jens
  *

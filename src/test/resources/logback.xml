@@ -9,15 +9,12 @@
 		</encoder>
 	</appender>
 
-	<!-- Bra för att minska utskrifterna från ramverken -->
-	<logger name="org.eclipse.jetty" level="info"/>
-	<logger name="org.hibernate" level="info"/>
-	<logger name="org.hibernate.SQL" level="debug"/>
-	<logger name="org.hibernate.util.JDBCExceptionReporter" level="trace"/> 
+	<!-- For this to work do we need to to create loggers with full class name not .getSimpleName() -->
+	<logger name="org.hopto.eriksen.resources" level="trace"/>
 
-
+	<!-- This will only affect code executed in the test domain -->
 	<!-- TRACE < DEBUG < INFO < WARN < ERROR -->
-	<root level="info">
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
 

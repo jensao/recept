@@ -3,16 +3,18 @@ package org.hopto.eriksen.resources.util;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.StatusType;
 
-
-/**
+/**  
+ * @deprecated Use {@link CustomNotFoundException} instead. The reason is that HTTP 422 is a WebDAV (RFC 4918) Error code. 
+ * 
  * Creates a HTTP 422 (Unprocessable Entity) exception.
- * This shall be used for validation errors, e.g. negative values in query params.
+ * This shall be used for validation errors, e.g. negative values in query params or missing fields in payload.
  * 
  * @param message
  *            the String that is the entity of the error response.
+ * 
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class CustomUnprocessableEntityException  extends WebApplicationException {
 
