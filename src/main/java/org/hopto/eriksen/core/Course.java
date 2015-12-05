@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,12 +36,18 @@ public class Course implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer courseId;
+	@Size(min = 3)
 	private String title;
 	private String comment;
 	private Date lastUpdated;
 	private Set<Recipe> recipes = new HashSet<Recipe>(0);
 
 	public Course() {
+	}
+	
+	public Course(String title, String comment) {
+		this.title = title;
+		this.comment = comment;
 	}
 
 	public Course(String title, String comment, Date lastUpdated,

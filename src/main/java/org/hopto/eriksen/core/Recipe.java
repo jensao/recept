@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -35,6 +36,8 @@ public class Recipe implements java.io.Serializable {
 	
 	private Integer recipeId;
 	private Course course;
+	
+	@Size(min = 3)
 	private String name;
 	
 	@JsonProperty("instructions")

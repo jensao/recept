@@ -1,7 +1,14 @@
 package org.hopto.eriksen.resources;
 
-import static com.jayway.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
+import static com.jayway.restassured.RestAssured.get;
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,18 +17,15 @@ import org.hopto.eriksen.core.Course;
 import org.hopto.eriksen.core.Recipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.Assert;
 
 import com.jayway.restassured.response.Response;
 
-// To remember about rest-assured 2.0 syntax:  "given / when / then"
-// This class is to long 
-@Test(groups = { "integration" })
-public class CourseResourceIT {
+public class CourseResourceBasicCrudIT {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CourseResourceIT.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(CourseResourceBasicCrudIT.class.getName());
 	static final String JSON = "application/json";
 	private Course course;
 	private String courseUrl;
@@ -51,6 +55,14 @@ public class CourseResourceIT {
 		recipe2.addInstruction("2 TREE");
 	}
 	
+//	@Test(dependsOnMethods = "testPostCourse")
+	@Test
+	public void testGetCourses() {
+		LOGGER.info("Running test testGetCourses");
+		// TODO Test that the query param "page" and "size" works, test test that 400 is received if faulty values is supplied.
+		get("http://localhost:8080/courses").then().assertThat().statusCode(200).and().contentType(JSON);
+	}
+	
 	@Test
 	public void testPostCourse()  {
 		LOGGER.info("Running test testPostCourse");
@@ -67,15 +79,6 @@ public class CourseResourceIT {
 			header("Location",  containsString("http")).
 		extract().
 			header("Location"); 
-	}
-	
-	// TODO Test that a post with a null title gives a error response!
-	
-	@Test(dependsOnMethods = "testPostCourse")
-	public void testGetCourses() {
-		LOGGER.info("Running test testGetCourses");
-		// TODO Test that the query param "page" and "size" works, test test that 400 is received if faulty values is supplied.
-		get("http://localhost:8080/courses").then().assertThat().statusCode(200).and().contentType(JSON);
 	}
 	
 	// Updates a course. in this TC will a new course be created but depends on the post TC anyway.
@@ -132,7 +135,6 @@ public class CourseResourceIT {
 		LOGGER.info("End of test testPutCourse");
 	}
 	
-	
 	@Test(dependsOnMethods = "testPostCourse")
 	public void testGetCourse() {
 		LOGGER.info("Running test testGetCourse");
@@ -149,20 +151,6 @@ public class CourseResourceIT {
 			body("lastUpdated", not(isEmptyString())).		// Change to date matcher
 			header("Cache-Control", "no-transform, max-age=3600");
 	}
-	
-	
-	 @Test
-	 public void testGetNonExistingCourse() {
-		LOGGER.info("Running test testGetNonExistingCourse");
-		given().
-			header("Content-Type", JSON).
-		when().
-			get("http://localhost:8080/courses/12345").
-		then().
-			statusCode(404).
-			body("name", not(isEmptyString())).
-			body("description", not(isEmptyString()));	
-	 }
 	
 	@Test(dependsOnMethods = "testPostCourse")
 	public void testPostRecipe() {
@@ -198,8 +186,6 @@ public class CourseResourceIT {
 		Assert.assertNotEquals(recipe1Url, recipe2Url, "The location urls shall not be equal");
 	}
 	
-	// TODO test post of a faulty recipe 
-
 	@Test(dependsOnMethods = "testPostRecipe")
 	public void testGetRecipies() {
 		LOGGER.info("Running test testGetRecipes");
@@ -222,6 +208,17 @@ public class CourseResourceIT {
 		Assert.assertEquals(resourceRecipe.getName(), recipe1.getName());
 		Assert.assertEquals(resourceRecipe.getRecipeInstructions().size() , 2);
 		Assert.assertEquals(resourceRecipe.getRecipeInstructions().get(0).getInstruction() , recipe1.getRecipeInstructions().get(0).getInstruction() );
+	}
+	
+	
+	// Helper method
+	public Recipe findRecipeInSet(List<Recipe> recipes, String name) {
+		for (Recipe r : recipes) {
+			if (r.getName().equals(name)) {
+				return r;
+			}
+		}
+		return null;
 	}
 	
 	@Test(dependsOnMethods = "testPostRecipe")
@@ -272,34 +269,7 @@ public class CourseResourceIT {
 		Assert.assertEquals(recipes.size(), 1);
 		Recipe recipeOne = findRecipeInSet(recipes, recipe1.getName());		
 		Assert.assertEquals(recipeOne.getName(), recipe1.getName());
-
 	}
-	
-	@Test(dependsOnMethods = "testPostRecipe")
-	public void testGetNonExistingRecipe() {
-		LOGGER.info("Running test testGetNonExistingRecipe");
-		
-		// Check that a non existing recipe id givs a error
-		given().
-			contentType(JSON).
-		when().
-			get(courseUrl + "/recipes/6666").	//  valid but non existing url
-		then().
-			statusCode(404).
-			body("name", not(isEmptyString())).
-			body("description", not(isEmptyString()));
-		
-		given().
-			contentType(JSON).
-		when().
-			get("http://localhost:8080/courses/6666/recipes/1").	// valid but non existing url
-		then().
-			statusCode(404).
-			body("name", not(isEmptyString())).
-			body("description", not(isEmptyString()));
-		
-	}
-	
 	
 	@Test(dependsOnMethods = "testGetRecipe" )
 	public void testPutRecipe() {
@@ -318,7 +288,7 @@ public class CourseResourceIT {
 		when().
 			put(recipe1Url).
 		then().
-			statusCode(200);
+			statusCode(204);
 		
 		// Get the recipe to check if the update was successfull
 		given().
@@ -360,13 +330,5 @@ public class CourseResourceIT {
 	}
 	
 	
-	// Helper method
-	public Recipe findRecipeInSet(List<Recipe> recipes, String name) {
-		for (Recipe r : recipes) {
-			if (r.getName().equals(name)) {
-				return r;
-			}
-		}
-		return null;
-	}
+	
 }

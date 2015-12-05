@@ -29,6 +29,7 @@ import org.hopto.eriksen.core.RecipeInstruction;
 import org.hopto.eriksen.db.CourseDAO;
 import org.hopto.eriksen.db.RecipeDAO;
 import org.hopto.eriksen.resources.util.CustomBadRequestException;
+import org.hopto.eriksen.resources.util.CustomConflictException;
 import org.hopto.eriksen.resources.util.CustomNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,7 @@ public class CourseResource {
 	@Timed
 	@UnitOfWork
 	public Response saveCourse(@Valid Course course) {
+		// TODO don't allow two courses with the same name!!
 		courseDAO.saveOrUpdate(course);
 		URI tmpUri = UriBuilder
 				.fromResource(CourseResource.class)
@@ -144,7 +146,7 @@ public class CourseResource {
 			throw new CustomNotFoundException("A recipe with database id " + courseId + " was not found");
 		}
 		
-		// TODO Create a response here
+		// This will generate a 204
 		courseDAO.delete(course);	
 	}
 	
@@ -185,6 +187,11 @@ public class CourseResource {
 			LOGGER.info("A course with database id " + courseId + " was not found");
 			throw new CustomNotFoundException("A course with database id " + courseId + " was not found");
 		}
+		
+		if(course.getRecipes().contains(recipe)) {
+			throw new CustomConflictException("A recipe which by definition is equal to "  + recipe +  " already exist. Will not store this one.");
+		}
+		
 		LOGGER.debug("Recived a post request with recipe data: " + recipe.toString());
 		
 		for (RecipeInstruction ri : recipe.getRecipeInstructions()) {
@@ -243,9 +250,8 @@ public class CourseResource {
 			LOGGER.debug("Will uppdate old recipe: " + existingRecipe.toString() + " with id " + recipeId + 
 					" belonging to a course with id " + courseId + " with the new data: "  + updatedRecipe.toString());  
 			
-			recipeDAO.merge(updatedRecipe);
-			// TODO Send a 204 here instead since the response doesn't include any content 
-			return Response.ok().build();
+			recipeDAO.merge(updatedRecipe); 
+			return Response.status(204).build();
 		}
 	}
 	

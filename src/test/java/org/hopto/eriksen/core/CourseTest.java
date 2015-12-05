@@ -3,7 +3,6 @@ package org.hopto.eriksen.core;
 import static io.dropwizard.testing.FixtureHelpers.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 

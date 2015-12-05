@@ -33,6 +33,8 @@ public class CourseDAOTest {
 	private static final String COURSE_COMMENT = "course comment";
 	private static final String COURSE_SECOND_COMMENT = "course second comment";
 	
+	private static final String RECIPE_1_NAME = "R1Name";
+	
 	@Test
 	public void testCreateAFullCourse() {
 		LOGGER.info("Starting test case testCreateAFullCourse");
@@ -45,14 +47,14 @@ public class CourseDAOTest {
 		courseDAO.saveOrUpdate(course);
 		
 		Recipe r1 = new Recipe();
-		r1.setName("R1");
+		r1.setName(RECIPE_1_NAME);
 		r1.addInstruction("R1 I1");
 		r1.addInstruction("R1 I2");
 		r1.addInstruction("R1 I3");
 		course.addRecipe(r1);
 		
 		Recipe r2 = new Recipe();
-		r2.setName("R2");
+		r2.setName("R2Name");
 		r2.addInstruction("R2 I1");
 		r2.addInstruction("R2 I2");
 		course.addRecipe(r2);
@@ -80,9 +82,9 @@ public class CourseDAOTest {
 		Set<Recipe> recipes = course.getRecipes();
 		Assert.assertEquals(recipes.size(), 2, "Two recipes shall have been found");
 		
-		Recipe r1 = course.getRecipeByName("R1");
+		Recipe r1 = course.getRecipeByName(RECIPE_1_NAME);
 		Assert.assertNotNull(r1, "The method getRecipeByName shall have found a recipe with name R1 for this course.");
-		Assert.assertEquals(r1.getName(), "R1");
+		Assert.assertEquals(r1.getName(), RECIPE_1_NAME);
 		
 		List<RecipeInstruction> instructions = r1.getRecipeInstructions();
 		Assert.assertEquals(instructions.size(), 3, "Tree instructions shall have been found");
@@ -112,7 +114,7 @@ public class CourseDAOTest {
 //		Recipe modifiedRecipe = new Recipe();
 //		modifiedRecipe.setName("R1");
 		
-		Recipe r1 = course.getRecipeByName("R1");
+		Recipe r1 = course.getRecipeByName(RECIPE_1_NAME);
 		// Modify the instructions, final result shall be; ["R1 I3", "R1 I1"]
 		List<RecipeInstruction> instructions = r1.getRecipeInstructions();
 		instructions.remove(1);
@@ -133,7 +135,7 @@ public class CourseDAOTest {
 		Course course = courseDAO.findById(courseId);		
 		Assert.assertEquals(course.getComment(), COURSE_SECOND_COMMENT);
 		
-		Recipe r1 = course.getRecipeByName("R1");
+		Recipe r1 = course.getRecipeByName(RECIPE_1_NAME);
 		List<RecipeInstruction> instructions = r1.getRecipeInstructions();
 		Assert.assertEquals(instructions.size(), 2);
 		Assert.assertEquals("R1 I3", instructions.get(0).getInstruction());

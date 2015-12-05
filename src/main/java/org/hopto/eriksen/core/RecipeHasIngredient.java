@@ -19,6 +19,7 @@ import javax.persistence.Table;
 @Table(name = "recipe_has_ingredient")
 public class RecipeHasIngredient implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private RecipeHasIngredientId id;
 	private Ingredient ingredient;
 	private Recipe recipe;
